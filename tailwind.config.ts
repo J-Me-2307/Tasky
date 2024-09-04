@@ -1,6 +1,9 @@
 module.exports = {
     theme: {
       extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
         colors: {
           rosewater: 'hsl(var(--rosewater) / <alpha-value>)',
           flamingo: 'hsl(var(--flamingo))',

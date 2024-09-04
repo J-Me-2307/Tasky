@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   plugins: [
     { src: '~/plugins/theme.js', mode: 'client'}
   ],
-  modules: ["@nuxtjs/tailwindcss", "nuxt-vuefire"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-vuefire", "@nuxt/icon"],
   vuefire: {
     auth: {
       enabled: true
