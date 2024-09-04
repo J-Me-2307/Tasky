@@ -4,19 +4,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   css: ["~/assets/css/main.css"],
+  plugins: [
+    { src: '~/plugins/theme.js', mode: 'client'}
+  ],
   modules: ["@nuxtjs/tailwindcss", "nuxt-vuefire"],
-
   vuefire: {
     auth: {
       enabled: true
     },
     config: {
-      apiKey: "AIzaSyBymfNDuy2Gx3DFtFRhSKHblJxUdRg3Rp0",
-      authDomain: "tasky-20d91.firebaseapp.com",
-      projectId: "tasky-20d91",
-      storageBucket: "tasky-20d91.appspot.com",
-      messagingSenderId: "225173706766",
-      appId: "1:225173706766:web:a67048983caa758221045f",
+      apiKey: process.env.API_KEY,
+      authDomain: process.env.AUTH_DOMAIN,
+      projectId: process.env.PROJECT_ID,
+      storageBucket: process.env.STORAGE_BUCKET,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID,
+      appId: process.env.APP_ID,
     },
   },
 });
