@@ -5,7 +5,10 @@
 
         <button @click.stop="quickSettingsIsOpen = !quickSettingsIsOpen"
           class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full mb-2">
-          <Icon name="mdi:user-circle" size="30" />
+          <Icon v-if="!user.photoURL" name="mdi:user-circle" size="30" />
+          <div v-if="user.photoURL" class="w-10 h-10 rounded-full overflow-hidden">
+            <img class="h-full w-full object-cover" :src="user.photoURL" />
+          </div>
           <span class="ms-3 text-lg">{{ user.displayName }}</span>
         </button>
 
@@ -14,7 +17,7 @@
           ref="quickSettings">
           <p class="text-lg block border-b border-text mb-2 pb-2 cursor-default">Quick settings</p>
 
-          <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full">
+          <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full" @click="navigate('profile')">
             <Icon name="mdi:user-circle" size="25" />
             <span class="ms-3">Profile</span>
           </button>
@@ -30,7 +33,7 @@
           <span class="pl-3">Add task</span>
         </button>
 
-        <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full">
+        <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full" @click="navigate('/')">
           <Icon name="mdi:calendar-blank" size="30" />
           <span class="pl-3">Today</span>
         </button>
@@ -41,7 +44,9 @@
         </button>
       </div>
     </aside>
-    <slot />
+    <div class="ml-56 flex">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -72,8 +77,14 @@ onBeforeUnmount(() => {
 });
 
 const auth = getAuth();
+const router = useRouter();
 
 function handleSignOut() {
   signOut(auth);
+}
+
+function navigate(to) {
+  router.push(to);
+  quickSettingsIsOpen.value = false;
 }
 </script>

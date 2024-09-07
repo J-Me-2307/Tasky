@@ -68,14 +68,6 @@ const router = useRouter();
 async function signIn(event) {
   event.preventDefault();
 
-  if(email.value === ''){
-    emailErrorMessage.value = 'Email is required'
-  }
-
-  if(password.value === ''){
-    passwordErrorMessage.value = 'Password is required'
-  }
-
   if(email.value && password.value && !emailErrorMessage.value){
     try{
       await signInWithEmailAndPassword(auth, email.value, password.value)

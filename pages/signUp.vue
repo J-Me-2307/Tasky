@@ -23,6 +23,7 @@
               'border-red text-red focus:border-red focus:ring-red ring-red ': usernameErrorMessage
             }
           ]" type="text" placeholder="username">
+          <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
         </div>
         <div class="mb-3 mt-1">
           <label>Password<span class="text-red">*</span></label>
@@ -129,20 +130,7 @@ const router = useRouter()
 async function signUp(event) {
   event.preventDefault();
 
-  if(email.value === ''){
-    emailErrorMessage.value = 'Email is required';
-  }
-  if(username.value === ''){
-    usernameErrorMessage.value = 'Username is required';
-  }
-  if(password.value === ''){
-    passwordErrorMessage.value = 'Password is required'
-  }
-  if(confirmPassword.value === ''){
-    confirmPasswordErrorMessage = 'Confirm your password'
-  }
-
-  if (!(emailErrorMessage.value || !usernameErrorMessage.value || !passwordErrorMessage.value || !confirmPasswordErrorMessage.value )) {
+  if (!(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value )) {
     try{
       const userCredentials = await createUserWithEmailAndPassword(auth, email.value, password.value);
       const user = userCredentials.user;
