@@ -1,5 +1,6 @@
 <template>
   <div @click="closeQuickSettingsIfClickedOutside">
+    <AddTask v-model:showDialog="addTaskDialog" />
     <aside class="bg-crust fixed top-0 left-0 z-40 w-56 h-screen sm:translate-x-0">
       <div class="h-full px-3 py-4 overflow-hidden relative">
 
@@ -28,7 +29,7 @@
           </button>
         </div>
 
-        <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full">
+        <button @click="addTask" class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full">
           <Icon name="mdi:add-circle" size="30" />
           <span class="pl-3">Add task</span>
         </button>
@@ -54,6 +55,7 @@
 import { getAuth, signOut } from 'firebase/auth'
 
 const user = useCurrentUser();
+const addTaskDialog = ref(false);
 
 useHead({
   title: 'Tasky'
@@ -86,5 +88,9 @@ function handleSignOut() {
 function navigate(to) {
   router.push(to);
   quickSettingsIsOpen.value = false;
+}
+
+const addTask = () => {
+  addTaskDialog.value = true;
 }
 </script>

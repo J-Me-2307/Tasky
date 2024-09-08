@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-  useHead({
-    title: 'Today - Tasky'
-  })
+<script setup>
+useHead({
+  title: 'Today - Tasky'
+})
 </script>
