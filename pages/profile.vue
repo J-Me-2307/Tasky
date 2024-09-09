@@ -10,13 +10,15 @@
             <Icon v-if="!user.photoURL" name="mdi:user-circle" size="160" />
           </div>
           <div class="ml-4">
-            <btn :text="user.photoURL ? 'Edit' : 'Add'" color="green" @click="triggerFileInput" additional-classes="w-20"/>
+            <btn :text="user.photoURL ? 'Edit' : 'Add'" color="green" @click="triggerFileInput"
+              additional-classes="w-20" />
 
             <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
 
           </div>
           <div class="ml-4">
-            <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture" additional-classes="w-20"/>
+            <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture"
+              additional-classes="w-20" />
           </div>
         </div>
       </div>
@@ -31,10 +33,21 @@
             }
           ]" type="text" placeholder="username">
           <div>
-            <btn text="Save" color="green" @click="updateUsername" additional-classes="w-20 ml-4" :hidden="!usernameShowSaveButton"/>
+            <btn text="Save" color="green" @click="updateUsername" additional-classes="w-20 ml-4"
+              :hidden="!usernameShowSaveButton" />
           </div>
         </div>
         <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
+      </div>
+      <div>
+        <p class="text-xl pb-3">Theme</p>
+        <select v-model="selectedTheme" @change="changeTheme" class="rounded-xl bg-surface0 px-4 py-2 text-text border focus:ring-1 focus:outline-none
+           focus:border-sky focus:ring-sky border-text transition-opacity duration-300 ease-in-out hover:opacity-80">
+          <option class=" hover:bg-surface1" value="Latte">Latte</option>
+          <option value="Frappe">Frappe</option>
+          <option value="Macchiato">Macchiato</option>
+          <option value="Mocha">Mocha</option>
+        </select>
       </div>
     </div>
   </div>
@@ -49,6 +62,18 @@ const fileInput = ref(null);
 useHead({
   title: 'Profile - Tasky'
 })
+
+const { $setTheme } = useNuxtApp()
+const selectedTheme = ref('')
+
+onMounted(() => {
+  // Set the initial value based on localStorage or default
+  selectedTheme.value = localStorage.getItem('theme') || 'Latte'
+})
+
+const changeTheme = () => {
+  $setTheme(selectedTheme.value)
+}
 
 const getUser = () => {
   const auth = getAuth();
