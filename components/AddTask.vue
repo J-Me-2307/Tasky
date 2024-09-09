@@ -13,12 +13,8 @@
         <DuedatePicker class="my-2" v-model="duedate" />
         <div class="border border-b-overlay1 w-full" />
         <div class="flex mt-2 justify-end">
-          <button @click="toggle" class="rounded-xl bg-yellow text-base px-2 py-1 text-sm mr-2">
-            Cancel
-          </button>
-          <button class="rounded-xl bg-green text-base px-2 py-1 text-sm">
-            Add
-          </button>
+          <btn @click="toggle" text="Cancel" color="yellow" size="sm" additional-classes="mr-2"/>
+          <btn color="green" size="sm" text="Add"/>
         </div>
       </div>
     </div>
@@ -26,7 +22,6 @@
 </template>
 
 <script setup>
-import { db } from 'firebase/firestore'
 let title = ref('');
 let description = ref('')
 let duedate = ref('');

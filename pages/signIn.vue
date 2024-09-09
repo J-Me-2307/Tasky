@@ -26,8 +26,8 @@
            <p class="mt-2 text-red">{{ passwordErrorMessage }}</p>
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
-          <a href="/signUp" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <button class="rounded-xl bg-blue text-base p-2">Sign in</button>
+          <a href="/signUp" class="text-sm self-center text-sapphire">I don't have an account!</a>
+          <btn text="Sign in" additional-classes="w-full"/>
         </div>
       </form>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class=" py-20 px-72">
+  <div class=" py-20 px-72 w-full">
     <div class="container mx-auto">
       <p class="text-3xl font-bold mb-16">Your profile</p>
       <div class="mb-10">
@@ -10,17 +10,13 @@
             <Icon v-if="!user.photoURL" name="mdi:user-circle" size="160" />
           </div>
           <div class="ml-4">
-            <button class="rounded-xl bg-green w-20 text-base p-2" @click="triggerFileInput">
-              <p v-if="user.photoURL">Edit</p>
-              <p v-if="!user.photoURL">Add</p>
-            </button>
+            <btn :text="user.photoURL ? 'Edit' : 'Add'" color="green" @click="triggerFileInput" additional-classes="w-20"/>
 
             <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
 
           </div>
           <div class="ml-4">
-            <button @click="deleteProfilePicture" v-if="user.photoURL"
-              class="rounded-xl bg-red w-20 text-base p-2">Remove</button>
+            <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture" additional-classes="w-20"/>
           </div>
         </div>
       </div>
@@ -28,15 +24,14 @@
         <p class="text-xl pb-3">Username</p>
         <div class="flex">
           <input v-model="username" @input="validateUsername" :class="[
-            'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
+            'rounded-xl bg-surface0 px-4 py-2 w-96 text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
               'focus:border-sky focus:ring-sky border-text': !usernameErrorMessage,
               'border-red text-red focus:border-red focus:ring-red ring-red ': usernameErrorMessage
             }
           ]" type="text" placeholder="username">
           <div>
-            <button @click="updateUsername" :hidden="!usernameShowSaveButton"
-              class="rounded-xl bg-green w-20 text-base p-2 ml-4">Save</button>
+            <btn text="Save" color="green" @click="updateUsername" additional-classes="w-20 ml-4" :hidden="!usernameShowSaveButton"/>
           </div>
         </div>
         <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>

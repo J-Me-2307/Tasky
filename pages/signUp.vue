@@ -49,7 +49,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signIn" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <button @click="signUp" class="rounded-xl bg-blue text-base p-2">Sign up</button>
+          <btn text="Sign up" additional-classes="w-full"/>
         </div>
       </form>
     </div>
