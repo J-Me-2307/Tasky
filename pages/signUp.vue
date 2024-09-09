@@ -5,7 +5,7 @@
       <form @submit="signUp">
         <div class="mb-3 mt-1">
           <label>Email<span class="text-red">*</span></label>
-          <input v-model="email" @input="validateEmail" :class="[
+          <input v-model="email" @input="initializeValidation" :class="[
             'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
               'focus:border-sky focus:ring-sky border-text': !emailErrorMessage,
@@ -16,7 +16,7 @@
         </div>
         <div class="mb-3 mt-1">
           <label>Username<span class="text-red">*</span></label>
-          <input v-model="username" @input="validateUsername" :class="[
+          <input v-model="username" @input="initializeValidation" :class="[
             'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none', 
             {
               'focus:border-sky focus:ring-sky border-text': !usernameErrorMessage,
@@ -27,7 +27,7 @@
         </div>
         <div class="mb-3 mt-1">
           <label>Password<span class="text-red">*</span></label>
-          <input v-model="password" @input="validatePassword" :class="[
+          <input v-model="password" @input="initializeValidation" :class="[
             'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
               'focus:border-sky focus:ring-sky border-text': !passwordErrorMessage,
@@ -38,7 +38,7 @@
         </div>
         <div class="mb-3 mt-1">
           <label>Confirm password<span class="text-red">*</span></label>
-          <input v-model="confirmPassword" @input="validateConfirmPassword" :class="[
+          <input v-model="confirmPassword" @input="initializeValidation" :class="[
             'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
               'focus:border-sky focus:ring-sky border-text': !confirmPasswordErrorMessage,
@@ -49,7 +49,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signIn" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <btn text="Sign up" additional-classes="w-full"/>
+          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full"/>
         </div>
       </form>
     </div>
@@ -81,7 +81,18 @@ let passwordErrorMessage = ref('');
 let confirmPassword = ref('');
 let confirmPasswordErrorMessage = ref('');
 
-function validateEmail() {
+const canSignUp = computed(() => {
+  return !(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value) && email.value && username.value && password.value && confirmPassword.value;
+})
+
+const initializeValidation = () => {
+  validateEmail();
+  validateUsername();
+  validatePassword();
+  validateConfirmPassword();
+}
+
+const validateEmail = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.value) && email.value !== '') {
     emailErrorMessage.value = "Email is not valid";
@@ -90,7 +101,7 @@ function validateEmail() {
   }
 }
 
-function validateUsername() {
+const validateUsername = () => {
   if((username.value.length < 3 || username.value.length > 20) && username.value !== ''){
     usernameErrorMessage.value = 'Username must be between 3 and 20 characters';
   } else{
@@ -98,7 +109,7 @@ function validateUsername() {
   }
 }
 
-function validatePassword() {
+const validatePassword = () => {
   const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]|\\:;'"<>,.?/`~-]).+$/;
 
   if ((password.value.length < 8 || password.value.length > 20) && password.value !== '') {
@@ -112,7 +123,7 @@ function validatePassword() {
   }
 }
 
-function validateConfirmPassword() {
+const validateConfirmPassword = () => {
   if (password.value !== confirmPassword.value && confirmPassword.value !== '') {
     confirmPasswordErrorMessage.value = 'Passwords do not match'
   }
@@ -122,10 +133,8 @@ function validateConfirmPassword() {
 }
 
 // Signing up
-
 const auth = getAuth();
 const router = useRouter()
-
 
 async function signUp(event) {
   event.preventDefault();

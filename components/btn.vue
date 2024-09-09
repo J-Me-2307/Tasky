@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button :class="buttonClass" :disabled="disabled" @click="onClick">
+    <button :class="buttonClass" :disabled="isDisabled" @click="onClick">
       {{ text }}
     </button>
   </div>
@@ -12,7 +12,7 @@ const props = defineProps({
     type: String,
     default: 'Button'
   },
-  disabled: {
+  isDisabled: {
     type: Boolean,
     default: false
   },
@@ -55,8 +55,8 @@ const buttonClass = computed(() => {
       fullClass += ' p-2';
       break;
   }
-  if(props.disabled) {
-    fullClass += ' opacity-50';
+  if (props.isDisabled) {
+    fullClass += ' opacity-50 cursor-not-allowed';
   } else {
     fullClass += ' hover:opacity-90';
   }
@@ -65,6 +65,8 @@ const buttonClass = computed(() => {
 
 const emit = defineEmits(['click']);
 const onClick = () => {
-  emit('click');
+  if (!props.isDisabled) {
+    emit('click');
+  }
 };
 </script>

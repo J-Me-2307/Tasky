@@ -33,8 +33,7 @@
             }
           ]" type="text" placeholder="username">
           <div>
-            <btn text="Save" color="green" @click="updateUsername" additional-classes="w-20 ml-4"
-              :hidden="!usernameShowSaveButton" />
+            <btn text="Update" :is-disabled="!canChangeUsername" color="green" @click="updateUsername" additional-classes="w-20 ml-4"/>
           </div>
         </div>
         <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
@@ -67,7 +66,6 @@ const { $setTheme } = useNuxtApp()
 const selectedTheme = ref('')
 
 onMounted(() => {
-  // Set the initial value based on localStorage or default
   selectedTheme.value = localStorage.getItem('theme') || 'Latte'
 })
 
@@ -86,7 +84,7 @@ let usernameShowSaveButton = ref(false);
 let username = ref(user.value.displayName);
 let usernameErrorMessage = ref('');
 
-function validateUsername() {
+const validateUsername = () => {
   if ((username.value.length < 3 || username.value.length > 20) && username.value !== '') {
     usernameErrorMessage.value = 'Username must be between 3 and 20 characters';
   } else {
@@ -100,9 +98,13 @@ function validateUsername() {
   }
 }
 
-function updateUsername() {
+const canChangeUsername = computed(() => {
+  return !usernameErrorMessage.value && username.value && username.value !== user.value.displayName;
+})
+
+const updateUsername = async () => {
   if (!usernameErrorMessage.value && usernameShowSaveButton.value === true) {
-    updateProfile(user.value, { displayName: username.value })
+    await updateProfile(user.value, { displayName: username.value })
   }
 }
 
@@ -140,7 +142,6 @@ const updateUserProfile = async (photoURL) => {
 const deleteProfilePicture = async () => {
   const storage = getStorage();
 
-  // Remove the old profile picture from Firebase Storage
   if (user.value.photoURL) {
     const fileRef = storageRef(storage, `profilePictures/${user.value.uid}`);
     try {
@@ -150,7 +151,6 @@ const deleteProfilePicture = async () => {
     }
   }
 
-  // Update the user profile to remove the photoURL
   await updateUserProfile('');
   user.value = getUser();
 };
