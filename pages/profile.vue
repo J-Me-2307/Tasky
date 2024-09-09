@@ -6,7 +6,7 @@
         <p class="text-xl pb-5">Profile picture</p>
         <div class="flex items-end">
           <div class="w-40 h-40 rounded-full overflow-hidden">
-            <img v-if="user.photoURL" :src="user.photoURL" class="h-full w-full object-cover">
+            <img alt="profile picture" v-if="user.photoURL" :src="user.photoURL" class="h-full w-full object-cover">
             <Icon v-if="!user.photoURL" name="mdi:user-circle" size="160" />
           </div>
           <div class="ml-4">

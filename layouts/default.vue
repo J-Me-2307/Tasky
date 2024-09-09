@@ -8,7 +8,7 @@
           class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full mb-2">
           <Icon v-if="!user.photoURL" name="mdi:user-circle" size="30" />
           <div v-if="user.photoURL" class="w-10 h-10 rounded-full overflow-hidden">
-            <img class="h-full w-full object-cover" :src="user.photoURL" />
+            <img class="h-full w-full object-cover" :src="user.photoURL" alt="Profile picture"/>
           </div>
           <span class="ms-3 text-lg">{{ user.displayName }}</span>
         </button>

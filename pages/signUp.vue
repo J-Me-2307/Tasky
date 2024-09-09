@@ -22,7 +22,7 @@
               'focus:border-sky focus:ring-sky border-text': !usernameErrorMessage,
               'border-red text-red focus:border-red focus:ring-red ring-red ': usernameErrorMessage
             }
-          ]" type="text" placeholder="username">
+          ]" type="text" placeholder="username (3 - 20)">
           <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
         </div>
         <div class="mb-3 mt-1">
@@ -33,7 +33,7 @@
               'focus:border-sky focus:ring-sky border-text': !passwordErrorMessage,
               'border-red text-red focus:border-red focus:ring-red ring-red': passwordErrorMessage
             }
-          ]" type="password" placeholder="password">
+          ]" type="password" placeholder="password (8 - 20)">
           <p class="mt-2 text-red">{{ passwordErrorMessage }}</p>
         </div>
         <div class="mb-3 mt-1">

@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   css: ["~/assets/css/main.css"],
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: 'en'  // Replace 'en' with your desired language code
+      }
+    }
+  },
   plugins: [
     { src: '~/plugins/theme.js', mode: 'client'}
   ],
