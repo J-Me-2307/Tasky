@@ -1,6 +1,5 @@
 <template>
-  <div class=" py-20 px-72 w-full">
-    <div class="container mx-auto">
+  <div class="py-20 px-72 w-full">
       <p class="text-3xl font-bold mb-16">Your profile</p>
       <div class="mb-10">
         <p class="text-xl pb-5">Profile picture</p>
@@ -49,7 +48,6 @@
         </select>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
