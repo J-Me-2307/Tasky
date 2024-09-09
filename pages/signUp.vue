@@ -15,9 +15,14 @@
           <p class="mt-2 text-red">{{ emailErrorMessage }}</p>
         </div>
         <div class="mb-3 mt-1">
-          <label>Username<span class="text-red">*</span></label>
+          <tooltip>
+            <template #trigger>
+              <label>Username<span class="text-red">*</span></label>
+            </template>
+            Username must be between 3 and 20 characters.
+          </tooltip>
           <input v-model="username" @input="initializeValidation" :class="[
-            'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none', 
+            'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
               'focus:border-sky focus:ring-sky border-text': !usernameErrorMessage,
               'border-red text-red focus:border-red focus:ring-red ring-red ': usernameErrorMessage
@@ -26,7 +31,13 @@
           <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
         </div>
         <div class="mb-3 mt-1">
-          <label>Password<span class="text-red">*</span></label>
+          <tooltip>
+            <template #trigger>
+              <label>Password<span class="text-red">*</span></label>
+            </template>
+            Password must be between 8 and 20 characters.
+            Password must contain capital letters, small letters, numbers, and special characters.
+          </tooltip>
           <input v-model="password" @input="initializeValidation" :class="[
             'rounded-xl bg-surface0 px-4 py-2 w-full text-text border placeholder::text-overlay1 focus:ring-1 focus:outline-none',
             {
@@ -49,7 +60,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signIn" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full"/>
+          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full" />
         </div>
       </form>
     </div>
@@ -102,9 +113,9 @@ const validateEmail = () => {
 }
 
 const validateUsername = () => {
-  if((username.value.length < 3 || username.value.length > 20) && username.value !== ''){
+  if ((username.value.length < 3 || username.value.length > 20) && username.value !== '') {
     usernameErrorMessage.value = 'Username must be between 3 and 20 characters';
-  } else{
+  } else {
     usernameErrorMessage.value = '';
   }
 }
@@ -139,16 +150,16 @@ const router = useRouter()
 async function signUp(event) {
   event.preventDefault();
 
-  if (!(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value )) {
-    try{
+  if (!(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value)) {
+    try {
       const userCredentials = await createUserWithEmailAndPassword(auth, email.value, password.value);
       const user = userCredentials.user;
 
-      await updateProfile(user, {displayName: username.value});
+      await updateProfile(user, { displayName: username.value });
 
       router.push('/');
     }
-    catch(error){
+    catch (error) {
       console.error(error.message);
     }
   }
