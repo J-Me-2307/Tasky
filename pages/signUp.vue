@@ -60,7 +60,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signIn" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full" />
+          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full" :loading="loading"/>
         </div>
       </form>
     </div>
@@ -91,6 +91,8 @@ let passwordErrorMessage = ref('');
 
 let confirmPassword = ref('');
 let confirmPasswordErrorMessage = ref('');
+
+let loading = ref(false);
 
 const canSignUp = computed(() => {
   return !(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value) && email.value && username.value && password.value && confirmPassword.value;
@@ -150,6 +152,7 @@ const router = useRouter()
 async function signUp(event) {
   event.preventDefault();
 
+  loading.value = true;
   if (!(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value)) {
     try {
       const userCredentials = await createUserWithEmailAndPassword(auth, email.value, password.value);
@@ -163,5 +166,6 @@ async function signUp(event) {
       console.error(error.message);
     }
   }
+  loading.value = true;
 }
 </script>

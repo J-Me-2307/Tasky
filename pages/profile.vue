@@ -10,10 +10,8 @@
           </div>
           <div class="ml-4">
             <btn :text="user.photoURL ? 'Edit' : 'Add'" color="green" @click="triggerFileInput"
-              additional-classes="w-20" />
-
+              additional-classes="w-20" :loading="addLoading"/>
             <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
-
           </div>
           <div class="ml-4">
             <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture"
@@ -55,6 +53,7 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObjec
 import { getAuth, updateProfile } from "firebase/auth";
 
 const fileInput = ref(null);
+let addLoading = ref(false);
 
 useHead({
   title: 'Profile - Tasky'

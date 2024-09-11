@@ -27,7 +27,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signUp" class="text-sm self-center text-sapphire">I don't have an account!</a>
-          <btn :is-disabled="!canSignUp" text="Sign in" additional-classes="w-full" />
+          <btn :is-disabled="!canSignUp" text="Sign in" additional-classes="w-full" :loading="loading"/>
         </div>
       </form>
     </div>
@@ -46,6 +46,8 @@ let emailErrorMessage = ref('');
 
 let password = ref('');
 let passwordErrorMessage = ref('');
+
+let loading = ref(false);
 
 definePageMeta({
   layout: 'not-signed-in'
@@ -76,6 +78,7 @@ const canSignUp = computed(() => {
 const signIn = async (event) => {
   event.preventDefault();
 
+  loading.value = true;
   if (email.value && password.value && !emailErrorMessage.value) {
     try {
       await signInWithEmailAndPassword(auth, email.value, password.value)
@@ -88,5 +91,6 @@ const signIn = async (event) => {
       passwordErrorMessage.value = 'Email or password is incorrect'
     }
   }
+  loading.value = false;
 }
 </script>
