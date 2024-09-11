@@ -68,7 +68,7 @@ const buttonClass = computed(() => {
   }
 
   // Handle disabled and loading states
-  fullClass += disable.value ? ' opacity-50 cursor-not-allowed pointer-events-none' : ' hover:opacity-90';
+  fullClass += disable.value ? ' opacity-50 cursor-not-allowed pointer-events-none' : ' hover:opacity-80';
 
   return fullClass + ' ' + props.additionalClasses;
 });

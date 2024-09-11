@@ -81,11 +81,11 @@ onBeforeUnmount(() => {
 const auth = getAuth();
 const router = useRouter();
 
-function handleSignOut() {
+const handleSignOut = () => {
   signOut(auth);
 }
 
-function navigate(to) {
+const navigate = (to) => {
   router.push(to);
   quickSettingsIsOpen.value = false;
 }

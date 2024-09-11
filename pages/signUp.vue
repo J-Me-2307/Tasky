@@ -60,7 +60,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2 pt-5">
           <a href="/signIn" class="text-sm self-center text-sapphire">I already have an account!</a>
-          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full" :loading="loading"/>
+          <btn :is-disabled="!canSignUp" text="Sign up" additional-classes="w-full" :loading="loading" />
         </div>
       </form>
     </div>
@@ -149,23 +149,27 @@ const validateConfirmPassword = () => {
 const auth = getAuth();
 const router = useRouter()
 
-async function signUp(event) {
+
+
+const signUp = async (event) => {
   event.preventDefault();
 
   loading.value = true;
-  if (!(emailErrorMessage.value || usernameErrorMessage.value || passwordErrorMessage.value || confirmPasswordErrorMessage.value)) {
-    try {
-      const userCredentials = await createUserWithEmailAndPassword(auth, email.value, password.value);
-      const user = userCredentials.user;
-
-      await updateProfile(user, { displayName: username.value });
-
-      router.push('/');
-    }
-    catch (error) {
-      console.error(error.message);
-    }
+  if (canSignUp) {
+    await createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then(async (userCredentials) => {
+        const user = userCredentials.user;
+        await updateProfile(user, { displayName: username.value });
+        router.push('/');
+      })
+      .catch((error) => {
+        console.log(error.code);
+        
+        if (error.code === 'auth/email-already-in-use') {
+          emailErrorMessage.value = 'Email already in use';
+        }
+      });
   }
-  loading.value = true;
+  loading.value = false;
 }
 </script>

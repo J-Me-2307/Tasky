@@ -79,17 +79,15 @@ const signIn = async (event) => {
   event.preventDefault();
 
   loading.value = true;
-  if (email.value && password.value && !emailErrorMessage.value) {
-    try {
-      await signInWithEmailAndPassword(auth, email.value, password.value)
-      router.push('/')
-    }
-    catch (error) {
-      console.error(error.message);
-
-      emailErrorMessage.value = 'Email or password is incorrect'
-      passwordErrorMessage.value = 'Email or password is incorrect'
-    }
+  if (canSignUp) {
+    await signInWithEmailAndPassword(auth, email.value, password.value)
+      .then(() => router.push('/'))
+      .catch((error) => {        
+        if(error.code === 'auth/invalid-credential'){
+          emailErrorMessage.value = 'Email or password is incorrect';
+          passwordErrorMessage.value = 'Email or password is incorrect';
+        }
+      });
   }
   loading.value = false;
 }
