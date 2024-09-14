@@ -17,11 +17,15 @@ import { ref } from 'vue';
 const visible = ref(false);
 
 const showTooltip = () => {
-  visible.value = true;
+  setTimeout(() => {
+    visible.value = true;
+  }, 250);
 };
 
 const hideTooltip = () => {
-  visible.value = false;
+  setTimeout(() => {
+    visible.value = false
+  }, 250);
 };
 
 const positionClass = 'bottom-full mb-2';
