@@ -16,8 +16,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import dayjs from 'dayjs';
+import { Timestamp } from "firebase/firestore"; // Import Firebase Timestamp
 
 // State
 const showPicker = ref(false);
@@ -33,9 +34,12 @@ const togglePicker = () => {
 
 const applyDateTime = () => {
   if (selectedDate.value && selectedTime.value) {
-    const datetime = `${selectedDate.value} ${selectedTime.value}`;
+    const datetime = `${selectedDate.value}T${selectedTime.value}`; // ISO format
+    const dateObj = new Date(datetime);
     formattedDateTime.value = dayjs(datetime).format('ddd. DD. MMM. - HH:mm');
-    emit('update:modelValue', formattedDateTime.value); // Emit the selected value to the parent
+    
+    const firebaseTimestamp = Timestamp.fromDate(dateObj); // Create Firebase timestamp
+    emit('update:modelValue', firebaseTimestamp); // Emit the Firebase timestamp to the parent
     showPicker.value = false;
   }
 };

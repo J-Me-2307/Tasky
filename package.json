@@ -16,6 +16,7 @@
     "firebase": "^10.13.1",
     "nuxt": "^3.13.0",
     "nuxt-vuefire": "^1.0.4",
+    "uuid": "^10.0.0",
     "vue": "latest"
   }
 }
