@@ -13,12 +13,15 @@
       <div v-for="(tasks, date) in groupedTasks" :key="date" class="mb-8">
         <p class="text-xl font-bold mb-4">{{ date }}</p>
         <ul>
-          <li v-for="task in tasks" :key="task.id">
+          <li v-for="task in tasks" :key="task.id" @click="openUpdateTask(task)">
             <Task :task="task" />
           </li>
         </ul>
       </div>
     </div>
+
+    <!-- Update Task Dialog -->
+    <update-task :showDialog="showUpdateTaskDialog" :task="selectedTask" @update:showDialog="toggleUpdateTaskDialog" />
   </div>
 </template>
 
@@ -36,6 +39,8 @@ const app = getApp();
 const db = getFirestore(app);
 
 const tasks = ref([]);
+const showUpdateTaskDialog = ref(false);
+const selectedTask = ref(null);
 
 const loadData = () => {
   const today = new Date();
@@ -110,4 +115,14 @@ onMounted(() => {
     if (unsubscribe) unsubscribe();
   });
 });
+
+const openUpdateTask = (task) => {
+  selectedTask.value = task;
+  showUpdateTaskDialog.value = true;
+};
+
+const toggleUpdateTaskDialog = (newVal) => {
+  showUpdateTaskDialog.value = newVal;
+};
+
 </script>

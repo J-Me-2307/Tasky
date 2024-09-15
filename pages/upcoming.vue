@@ -12,12 +12,13 @@
       <div v-for="(tasks, date) in taskGroups" :key="date" class="mb-8">
         <p class="text-xl font-bold mb-4">{{ date }}</p>
         <ul>
-          <li v-for="task in tasks" :key="task.id">
+          <li v-for="task in tasks" :key="task.id" @click="openUpdateTask(task)">
             <Task :task="task" />
           </li>
         </ul>
       </div>
     </div>
+    <update-task :showDialog="showUpdateTaskDialog" :task="selectedTask" @update:showDialog="toggleUpdateTaskDialog" />
   </div>
 </template>
 
@@ -36,6 +37,8 @@ const db = getFirestore(app);
 
 const tasks = ref([]);
 const taskGroups = ref({});
+const showUpdateTaskDialog = ref(false);
+const selectedTask = ref(null);
 
 // Compute the total number of tasks across all groups
 const totalTasks = computed(() => {
@@ -94,4 +97,14 @@ onMounted(() => {
     if (unsubscribe) unsubscribe();
   });
 });
+
+const openUpdateTask = (task) => {
+  selectedTask.value = task;
+  showUpdateTaskDialog.value = true;
+};
+
+const toggleUpdateTaskDialog = (newVal) => {
+  showUpdateTaskDialog.value = newVal;
+};
+
 </script>

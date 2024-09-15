@@ -1,8 +1,10 @@
 <template>
-  <div class="bg-mantle p-4 rounded-xl my-2 hover:opacity-90 transition-all ease-in-out duration-300">
+  <div class="bg-mantle p-4 rounded-xl my-2 cursor-pointer hover:opacity-90 transition-all ease-in-out duration-300">
     <div class="flex flex-col">
       <div class="flex items-center">
-        <Checkbox :isChecked="task.done" @update:isChecked="updateTaskStatus" />
+        <div @click.stop>
+          <Checkbox :isChecked="task.done" @update:isChecked="updateTaskStatus" />
+        </div>
         <p class="ml-4">{{ task.title }}</p>
       </div>
       <div v-if="task.duedate || task.description" class="flex ml-10 mt-1 text-overlay0">
@@ -34,7 +36,7 @@ const formatDuedate = (duedate) => {
   let datetime = duedate.toDate();
 
   return dayjs(datetime).format('ddd. DD. MMM. - HH:mm');
-}
+};
 
 const updateTaskStatus = async (newStatus) => {
   props.task.done = newStatus;
@@ -42,7 +44,7 @@ const updateTaskStatus = async (newStatus) => {
     title: props.task.title,
     description: props.task.description,
     duedate: props.task.duedate,
-    done: props.task.done,
+    done: props.task.done
   });
 };
 </script>

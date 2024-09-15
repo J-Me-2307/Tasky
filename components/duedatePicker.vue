@@ -16,9 +16,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import { Timestamp } from "firebase/firestore"; // Import Firebase Timestamp
+
+// Props
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    default: () => null
+  }
+});
 
 // State
 const showPicker = ref(false);
@@ -43,4 +51,15 @@ const applyDateTime = () => {
     showPicker.value = false;
   }
 };
+
+// Watch for changes in modelValue prop
+watch(() => props.modelValue, (newValue) => {
+  if (newValue instanceof Timestamp) {
+    const dateObj = newValue.toDate();
+    selectedDate.value = dayjs(dateObj).format('YYYY-MM-DD');
+    selectedTime.value = dayjs(dateObj).format('HH:mm');
+    formattedDateTime.value = dayjs(dateObj).format('ddd. DD. MMM. - HH:mm');
+  }
+}, { immediate: true });
+
 </script>
