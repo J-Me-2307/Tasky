@@ -9,13 +9,13 @@
             <Icon v-if="!user.photoURL" name="mdi:user-circle" size="160" />
           </div>
           <div class="ml-4">
-            <btn :text="user.photoURL ? 'Edit' : 'Add'" color="green" @click="triggerFileInput"
+            <btn :text="user.photoURL ? 'Change' : 'Add'" color="green" @click="triggerFileInput"
               additional-classes="w-20" :loading="addLoading"/>
             <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
           </div>
           <div class="ml-4">
             <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture"
-              additional-classes="w-20" />
+              additional-classes="w-20"/>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
             }
           ]" type="text" placeholder="username">
           <div>
-            <btn text="Update" :is-disabled="!canChangeUsername" color="green" @click="updateUsername" additional-classes="w-20 ml-4"/>
+            <btn text="Update" :is-disabled="!canChangeUsername" color="green" @click="updateUsername" additional-classes="w-20 ml-4" :loading="usernameLoading"/>
           </div>
         </div>
         <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
@@ -54,6 +54,8 @@ import { getAuth, updateProfile } from "firebase/auth";
 
 const fileInput = ref(null);
 let addLoading = ref(false);
+
+let usernameLoading = ref(false);
 
 useHead({
   title: 'Profile - Tasky'
@@ -99,11 +101,21 @@ const canChangeUsername = computed(() => {
   return !usernameErrorMessage.value && username.value && username.value !== user.value.displayName;
 })
 
+
 const updateUsername = async () => {
   if (!usernameErrorMessage.value && usernameShowSaveButton.value === true) {
-    await updateProfile(user.value, { displayName: username.value })
+    usernameLoading.value = true;  // Start loading
+    try {
+      await updateProfile(user.value, { displayName: username.value });
+      user.value.displayName = username.value;  // Update the local user object
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      usernameLoading.value = false;  // Stop loading after the update
+    }
   }
-}
+};
+
 
 const triggerFileInput = () => {
   fileInput.value.click();
@@ -118,20 +130,21 @@ const handleFileChange = async (event) => {
 
 const uploadFile = async (file) => {
   const storage = getStorage();
+  const fileRef = storageRef(storage, `profilePictures/${user.value.uid}`);
 
-  const fileRef = storageRef(storage, `profilePictures/${user.value.uid}`)
-
+  addLoading.value = true;  // Start loading
   try {
     await uploadBytes(fileRef, file);
+    const downloadURL = await getDownloadURL(fileRef);
+    await updateUserProfile(downloadURL);
   } catch (error) {
-    console.error(error.message)
+    console.error(error.message);
+  } finally {
+    addLoading.value = false;  // Stop loading after the process is complete
   }
+};
 
-  const downloadURL = await getDownloadURL(fileRef);
 
-  await updateUserProfile(downloadURL)
-
-}
 const updateUserProfile = async (photoURL) => {
   await updateProfile(user.value, { photoURL: photoURL })
 }
