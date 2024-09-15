@@ -18,7 +18,7 @@
           ref="quickSettings">
           <p class="text-lg block border-b border-text mb-2 pb-2 cursor-default">Quick settings</p>
 
-          <button :class="{'bg-surface1': isActive('/profile')}" class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full" @click="navigate('profile')">
+          <button class="flex items-center p-2 rounded-xl hover:bg-surface1 w-full" @click="navigate('profile')">
             <Icon name="mdi:user-circle" size="25" />
             <span class="ms-3">Profile</span>
           </button>
