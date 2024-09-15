@@ -63,12 +63,20 @@ const loadData = () => {
       return groups;
     }, {});
 
-    // Sort the groups by date and tasks within each group by time
+    // Sort the groups by date and ensure 'No Due Date' is at the end
     taskGroups.value = Object.keys(groupedTasks)
-      .sort((a, b) => dayjs(a, 'DD.MM.YYYY').unix() - dayjs(b, 'DD.MM.YYYY').unix())  // Sort dates
+      .sort((a, b) => {
+        if (a === 'No Due Date') return 1;  // Place 'No Due Date' at the end
+        if (b === 'No Due Date') return -1;
+        return dayjs(a, 'DD.MM.YYYY').unix() - dayjs(b, 'DD.MM.YYYY').unix();  // Sort other dates
+      })
       .reduce((sortedGroups, date) => {
         // Sort tasks within each group by time
-        sortedGroups[date] = groupedTasks[date].sort((a, b) => dayjs(a.duedate.toDate()).unix() - dayjs(b.duedate.toDate()).unix());
+        sortedGroups[date] = groupedTasks[date].sort((a, b) => {
+          if (!a.duedate) return 1; // Tasks with no duedate go last
+          if (!b.duedate) return -1;
+          return dayjs(a.duedate.toDate()).unix() - dayjs(b.duedate.toDate()).unix();
+        });
         return sortedGroups;
       }, {});
   }));

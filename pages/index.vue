@@ -5,22 +5,28 @@
         <p class="text-3xl font-bold">Today</p>
         <div class="flex items-center space-x-2">
           <Icon class="leading-none" name="mdi:checkbox-marked-circle-outline" size="15" />
-          <p class="text-sm leading-1">{{ tasks.length }} Task<span v-if="tasks.length !== 1">s</span></p>
+          <p class="text-sm leading-1">{{ totalTasks }} Task<span v-if="totalTasks !== 1">s</span></p>
         </div>
       </div>
-      <ul>
-        <li v-for="task in tasks" :key="task.id">
-          <Task :task="task" />
-        </li>
-      </ul>
+
+      <!-- Grouped Tasks by Date -->
+      <div v-for="(tasks, date) in groupedTasks" :key="date" class="mb-8">
+        <p class="text-xl font-bold mb-4">{{ date }}</p>
+        <ul>
+          <li v-for="task in tasks" :key="task.id">
+            <Task :task="task" />
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getApp } from "firebase/app";
 import { collection, query, where, onSnapshot, getFirestore } from "firebase/firestore";
+import dayjs from 'dayjs';
 
 useHead({
   title: 'Today - Tasky'
@@ -62,6 +68,39 @@ const loadData = () => {
   };
 };
 
+// Group tasks by due date (including "No Due Date")
+const groupedTasks = computed(() => {
+  const groups = tasks.value.reduce((acc, task) => {
+    const formattedDate = task.duedate
+      ? dayjs(task.duedate.toDate()).format('DD.MM.YYYY')  // Format due date
+      : 'No Due Date';  // Group tasks with no due date
+    if (!acc[formattedDate]) {
+      acc[formattedDate] = [];
+    }
+    acc[formattedDate].push(task);
+    return acc;
+  }, {});
+
+  // Sort groups by date, with "No Due Date" at the end
+  const sortedGroups = Object.keys(groups).sort((a, b) => {
+    if (a === 'No Due Date') return 1; // "No Due Date" should always be last
+    if (b === 'No Due Date') return -1;
+    return dayjs(a, 'DD.MM.YYYY').unix() - dayjs(b, 'DD.MM.YYYY').unix();
+  });
+
+  // Return sorted tasks grouped by date
+  return sortedGroups.reduce((acc, date) => {
+    acc[date] = groups[date].sort((a, b) => {
+      if (!a.duedate) return 1;  // No due date goes last within the group
+      if (!b.duedate) return -1;
+      return dayjs(a.duedate.toDate()).unix() - dayjs(b.duedate.toDate()).unix();  // Sort by time within each group
+    });
+    return acc;
+  }, {});
+});
+
+// Calculate total number of tasks
+const totalTasks = computed(() => tasks.value.length);
 
 onMounted(() => {
   const unsubscribe = loadData();
