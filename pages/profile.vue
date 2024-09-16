@@ -30,7 +30,7 @@
             }
           ]" type="text" placeholder="username">
           <div>
-            <btn text="Update" :is-disabled="!canChangeUsername" color="green" @click="updateUsername" additional-classes="w-20 ml-4" :loading="usernameLoading"/>
+            <btn text="Change" :is-disabled="!canChangeUsername" color="green" @click="updateUsername" additional-classes="w-20 ml-4" :loading="usernameLoading"/>
           </div>
         </div>
         <p class="mt-2 text-red">{{ usernameErrorMessage }}</p>
@@ -84,6 +84,8 @@ let username = ref(user.value.displayName);
 let usernameErrorMessage = ref('');
 
 const validateUsername = () => {
+  localStorage.setItem('username', username.value);
+
   if ((username.value.length < 3 || username.value.length > 20) && username.value !== '') {
     usernameErrorMessage.value = 'Username must be between 3 and 20 characters';
   } else {
@@ -104,15 +106,16 @@ const canChangeUsername = computed(() => {
 
 const updateUsername = async () => {
   if (!usernameErrorMessage.value && usernameShowSaveButton.value === true) {
-    usernameLoading.value = true;  // Start loading
-    try {
-      await updateProfile(user.value, { displayName: username.value });
-      user.value.displayName = username.value;  // Update the local user object
-    } catch (error) {
+    usernameLoading.value = true;
+    await updateProfile(user.value, { displayName: username.value }).then(() => {
+      user.value.displayName = username.value;
+      usernameShowSaveButton.value = false;
+      localStorage.removeItem('username');
+    }).catch((error) => {
       console.error(error.message);
-    } finally {
-      usernameLoading.value = false;  // Stop loading after the update
-    }
+    }).finally(() => {
+      usernameLoading.value = false;
+    });
   }
 };
 
@@ -164,5 +167,15 @@ const deleteProfilePicture = async () => {
   await updateUserProfile('');
   user.value = getUser();
 };
+
+onMounted(() => {
+  const cachedUsername = localStorage.getItem('username');
+  if (cachedUsername) {
+    username.value = cachedUsername;
+  } else {
+    username.value = user.value.displayName;
+  }
+
+})
 
 </script>
