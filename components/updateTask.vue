@@ -76,6 +76,7 @@ const validateTitle = () => {
 };
 
 const deleteTask = async () => {
+  validateTitle();
   await deleteDoc(doc(db, "tasks", props.task.id)).then(() => {
     title.value = '';
     description = '';

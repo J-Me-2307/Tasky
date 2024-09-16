@@ -75,6 +75,7 @@ const cancel = () => {
 }
 
 const addTask = async () => {
+  validateTitle();
   const id = uuidv4();
   if (title.value) {
     await setDoc(doc(db, "tasks", id), {
