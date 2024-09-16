@@ -48,6 +48,7 @@ let titleErrorMessage = ref('');
 
 const app = getApp();
 const db = getFirestore(app);
+const user = await getCurrentUser();
 
 const validateTitle = () => {
   if (!title.value) {
@@ -82,7 +83,8 @@ const addTask = async () => {
       title: title.value,
       description: description.value ? description.value : null,
       duedate: duedate.value ? duedate.value : null,
-      done: false
+      done: false,
+      userId: user.uid
     }).then(() => {
       title.value = '';
       description = '';

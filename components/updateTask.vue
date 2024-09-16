@@ -55,6 +55,7 @@ const props = defineProps({
 
 const app = getApp();
 const db = getFirestore(app);
+const user = await getCurrentUser();
 
 const emit = defineEmits(['update:showDialog']);
 
@@ -98,7 +99,8 @@ const updateTask = async () => {
       title: title.value,
       description: description.value ? description.value : null,
       duedate: duedate.value ? duedate.value : null,
-      done: false
+      done: false,
+      userId: user.uid
     }).then(() => {
       title.value = '';
       description.value = '';

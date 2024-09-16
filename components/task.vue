@@ -22,6 +22,7 @@ import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
 const app = getApp();
 const db = getFirestore(app);
+const user = await getCurrentUser();
 
 const props = defineProps({
   task: {
@@ -44,7 +45,8 @@ const updateTaskStatus = async (newStatus) => {
     title: props.task.title,
     description: props.task.description,
     duedate: props.task.duedate,
-    done: props.task.done
+    done: props.task.done,
+    userId: user.uid
   });
 };
 </script>

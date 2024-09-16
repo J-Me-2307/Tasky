@@ -25,7 +25,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { getApp } from 'firebase/app';
-import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+import { collection, getFirestore, onSnapshot, where, query } from 'firebase/firestore';
 import dayjs from 'dayjs';
 
 useHead({
@@ -34,6 +34,7 @@ useHead({
 
 const app = getApp();
 const db = getFirestore(app);
+const user = await getCurrentUser();
 
 const tasks = ref([]);
 const taskGroups = ref({});
@@ -48,8 +49,9 @@ const totalTasks = computed(() => {
 const loadData = () => {
   const taskRef = collection(db, 'tasks');
 
+  const upcomingQuery = query(taskRef, where('userId', '==', user.uid));
   // Real-time listener for tasks.
-  const unsubUpcoming = onSnapshot(taskRef, (snapshot => {
+  const unsubUpcoming = onSnapshot(upcomingQuery, (snapshot => {
     const upcomingTasks = snapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
       .filter(task => task.done === false || task.done === undefined);

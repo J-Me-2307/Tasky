@@ -37,6 +37,7 @@ useHead({
 
 const app = getApp();
 const db = getFirestore(app);
+const user = await getCurrentUser();
 
 const tasks = ref([]);
 const showUpdateTaskDialog = ref(false);
@@ -48,8 +49,8 @@ const loadData = () => {
   const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
 
   const tasksRef = collection(db, 'tasks');
-  const todayQuery = query(tasksRef, where('duedate', '>=', startOfDay), where('duedate', '<=', endOfDay));
-  const nullQuery = query(tasksRef, where('duedate', '==', null));
+  const todayQuery = query(tasksRef, where('duedate', '>=', startOfDay), where('duedate', '<=', endOfDay), where('userId', '==', user.uid));
+  const nullQuery = query(tasksRef, where('duedate', '==', null), where('userId', '==', user.uid));
 
   // Real-time listener for tasks with today's due date
   const unsubToday = onSnapshot(todayQuery, (snapshot) => {
