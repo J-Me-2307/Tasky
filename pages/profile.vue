@@ -11,7 +11,7 @@
           <div class="ml-4">
             <btn :text="user.photoURL ? 'Change' : 'Add'" color="green" @click="triggerFileInput"
               additional-classes="w-20" :loading="addLoading"/>
-            <input type="file" ref="fileInput" style="display: none;" @change="handleFileChange">
+            <input type="file" accept=".png, .jpg, .gif" ref="fileInput" style="display: none;" @change="handleFileChange">
           </div>
           <div class="ml-4">
             <btn v-if="user.photoURL" text="Remove" color="red" @click="deleteProfilePicture"
